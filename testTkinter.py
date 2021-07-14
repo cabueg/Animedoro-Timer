@@ -22,7 +22,8 @@ class App():
     def countdown(self):
         totalTime = tk.StringVar()
         totalTime = self.timerVar.get()
-        
+
+        #destroys all the labels and entries and replaces with counter
         self.root.geometry('250x250')
         self.timerLabel.pack_forget()
         self.submitButton.pack_forget()
@@ -30,11 +31,37 @@ class App():
         self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime*60)
         self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
         self.updateCountdownScreen(totalTime*60)
+
     def updateCountdownScreen(self, count):
+        #updates the label after every second
         self.countdownLabel['text'] = count
         self.root.update()
         if (count > 0):
             self.root.after(1000, self.updateCountdownScreen, count-1)
+        else:
+            self.countdownLabel.destroy()
+            self.animeTimer()
+    
+    def animeTimer(self):
+        self.root.geometry('250x250')
+        self.timerVar = tk.IntVar()
+        self.radioVar = tk.StringVar()
+
+        #created a label with an entry area for timer duration
+        self.timerLabel = tk.Label(self.root, text = 'Timer Duration(Minutes)')
+        self.timerLabel.pack(side=TOP)
+        self.timerEntryArea = tk.Entry(self.root,textvariable = self.timerVar, width = 5)
+        self.timerEntryArea.pack(side=TOP)
+
+        #created submit button
+        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.countdown)
+        self.submitButton.pack(side=BOTTOM, pady=15)
+        self.root.mainloop()
+
+        #maybe can start implementing a database of animes that you want to watch. I wanted to try out mongodb or something easy.
+
+
+    
 
 app = App()
 
