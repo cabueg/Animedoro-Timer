@@ -4,19 +4,7 @@ from tkinter.constants import ANCHOR, BOTTOM, CENTER, DISABLED, LEFT, N, RIGHT, 
 class App():
     def __init__(self):
         self.root = tk.Tk()
-        self.root.geometry('250x250')
-        self.timerVar = tk.IntVar()
-        self.radioVar = tk.StringVar()
-
-        #created a label with an entry area for timer duration
-        self.timerLabel = tk.Label(self.root, text = 'Timer Duration(Minutes)')
-        self.timerLabel.pack(side=TOP)
-        self.timerEntryArea = tk.Entry(self.root,textvariable = self.timerVar, width = 5)
-        self.timerEntryArea.pack(side=TOP)
-
-        #created submit button
-        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.countdown)
-        self.submitButton.pack(side=BOTTOM, pady=15)
+        self.studyTimer()
         self.root.mainloop()
 
     def countdown(self):
@@ -30,10 +18,10 @@ class App():
         self.timerEntryArea.pack_forget()
         self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime*60)
         self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
-        self.updateCountdownScreen(totalTime*60)
+        self.updateCountdownScreen(totalTime)
 
     def updateCountdownScreen(self, count):
-        #updates the label after every second
+        #up dates the label after every second
         self.countdownLabel['text'] = count
         self.root.update()
         if (count > 0):
@@ -42,16 +30,36 @@ class App():
             self.countdownLabel.destroy()
             self.animeTimer()
     
-    def animeTimer(self):
+    def studyTimer(self):
         self.root.geometry('250x250')
+        self.root.title("Study Timer")
         self.timerVar = tk.IntVar()
-        self.radioVar = tk.StringVar()
 
         #created a label with an entry area for timer duration
         self.timerLabel = tk.Label(self.root, text = 'Timer Duration(Minutes)')
         self.timerLabel.pack(side=TOP)
         self.timerEntryArea = tk.Entry(self.root,textvariable = self.timerVar, width = 5)
         self.timerEntryArea.pack(side=TOP)
+
+        #created submit button
+        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.countdown)
+        self.submitButton.pack(side=BOTTOM, pady=15)
+    
+    def animeTimer(self):
+        self.root.geometry('250x250')
+        self.root.title("Break Timer")
+        self.timerVar = tk.IntVar()
+
+        #created a label with an entry area for timer duration
+        self.timerLabel = tk.Label(self.root, text = 'Timer Duration(Minutes)')
+        self.timerLabel.pack(side=TOP)
+        self.timerEntryArea = tk.Entry(self.root,textvariable = self.timerVar, width = 5)
+        self.timerEntryArea.pack(side=TOP)
+
+        #Create a Entry for Anime watching
+        self.animeLabel = tk.Label(self.root, text= "What are you watching?")
+        self.animeEntryArea = tk.Entry(self.root, width=10)
+        self.animeEntryArea.pack()
 
         #created submit button
         self.submitButton = tk.Button(self.root, text = 'Submit', command = self.countdown)
