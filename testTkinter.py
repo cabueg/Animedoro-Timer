@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.constants import ANCHOR, BOTTOM, CENTER, DISABLED, LEFT, N, RIGHT, S, TOP
+import time
 
 class App():
     def __init__(self):
@@ -7,8 +8,8 @@ class App():
         self.studyTimer()
         self.root.mainloop()
 
-    def countdown(self):
-        totalTime = tk.StringVar()
+    def studyCountdown(self):
+        totalTime = tk.IntVar()
         totalTime = self.timerVar.get()
 
         #destroys all the labels and entries and replaces with counter
@@ -16,19 +17,21 @@ class App():
         self.timerLabel.pack_forget()
         self.submitButton.pack_forget()
         self.timerEntryArea.pack_forget()
-        self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime*60)
+        self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime)
         self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
-        self.updateCountdownScreen(totalTime)
 
-    def updateCountdownScreen(self, count):
-        #up dates the label after every second
-        self.countdownLabel['text'] = count
-        self.root.update()
-        if (count > 0):
-            self.root.after(1000, self.updateCountdownScreen, count-1)
-        else:
-            self.countdownLabel.destroy()
-            self.animeTimer()
+        #countdown timer 
+        while (totalTime > 0):
+            self.countdownLabel['text'] = totalTime
+            self.root.update()
+            totalTime-=1
+            time.sleep(1)
+        self.countdownLabel.destroy()
+        self.animeTimer()
+
+
+        
+
     
     def studyTimer(self):
         self.root.geometry('250x250')
@@ -42,13 +45,15 @@ class App():
         self.timerEntryArea.pack(side=TOP)
 
         #created submit button
-        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.countdown)
+        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.studyCountdown)
         self.submitButton.pack(side=BOTTOM, pady=15)
     
     def animeTimer(self):
         self.root.geometry('250x250')
         self.root.title("Break Timer")
         self.timerVar = tk.IntVar()
+        self.animeEntry = tk.StringVar()
+        self.animeEP = tk.StringVar()
 
         #created a label with an entry area for timer duration
         self.timerLabel = tk.Label(self.root, text = 'Timer Duration(Minutes)')
@@ -57,18 +62,51 @@ class App():
         self.timerEntryArea.pack(side=TOP)
 
         #Create a Entry for Anime watching
-        self.animeLabel = tk.Label(self.root, text= "What are you watching?")
-        self.animeEntryArea = tk.Entry(self.root, width=10)
+        self.animeLabel = tk.Label(self.root, text= "What are you watching?   EP #", pady=10)
+        self.animeLabel.pack()
+        self.animeEntryArea = tk.Entry(self.root, width=20, textvariable= self.animeEntry)
         self.animeEntryArea.pack()
+        self.animeEPEntryArea = tk.Entry(self.root, width=5, textvariable= self.animeEP)
+        self.animeEPEntryArea.place(in_= self.animeEntryArea, relx=1.1)
 
         #created submit button
-        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.countdown)
+        self.submitButton = tk.Button(self.root, text = 'Submit', command = self.animeCountdown)
         self.submitButton.pack(side=BOTTOM, pady=15)
         self.root.mainloop()
 
-        #maybe can start implementing a database of animes that you want to watch. I wanted to try out mongodb or something easy.
+    def animeCountdown(self):
+        #get() all my variables needed 
+        totalTime = tk.IntVar()
+        totalTime = self.timerVar.get()
+        currentAnime = self.animeEntry.get()
+        currentEP = self.animeEP.get()
 
+        #delete all labels
+        self.timerLabel.pack_forget()
+        self.timerEntryArea.pack_forget()
+        self.submitButton.pack_forget()
+        self.animeLabel.pack_forget()
+        self.animeEntryArea.pack_forget()
+        self.animeEPEntryArea.pack_forget()
 
+        #create label with anime currently watching
+        self.watchingLabel = tk.Label(self.root, text = ("Currently Watching " + currentAnime + " EP " + currentEP))
+        self.watchingLabel.pack()
+
+        #Countdown timer
+        self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime)
+        self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
+
+        while (totalTime > 0):
+            self.countdownLabel['text'] = totalTime
+            self.root.update()
+            totalTime-=1
+            time.sleep(1)
+        self.countdownLabel.destroy()
+        self.watchingLabel.destroy()
+        self.studyTimer()
+
+#Implement Stop button during Timer
     
 
 app = App()
