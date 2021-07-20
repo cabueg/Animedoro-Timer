@@ -30,7 +30,7 @@ class App():
         self.timerEntryArea.pack_forget()
         self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime*60)
         self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
-        self.updateCountdownScreen(totalTime*60)
+        self.updateCountdownScreen(totalTime)
 
     def updateCountdownScreen(self, count):
         #updates the label after every second
