@@ -3,34 +3,41 @@ from tkinter.constants import ANCHOR, BOTTOM, CENTER, DISABLED, LEFT, N, RIGHT, 
 import time
 
 class App():
+    
     def __init__(self):
         self.root = tk.Tk()
+        self.screen = 1
+        self.completedAnimedoros = 0
         self.studyTimer()
         self.root.mainloop()
 
     def studyCountdown(self):
         totalTime = tk.IntVar()
         totalTime = self.timerVar.get()
+        self.screen = 0
 
         #destroys all the labels and entries and replaces with counter
         self.root.geometry('250x250')
         self.timerLabel.pack_forget()
         self.submitButton.pack_forget()
         self.timerEntryArea.pack_forget()
-        self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime)
-        self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
+        self.studyCountdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime)
+        self.studyCountdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
+
+        #stop timer button
+        self.stopButton = tk.Button(self.root, text = "Stop", command = self.stopTimer)
+        self.stopButton.pack(side=BOTTOM, pady=15)
 
         #countdown timer 
         while (totalTime > 0):
-            self.countdownLabel['text'] = totalTime
+            self.studyCountdownLabel['text'] = totalTime
             self.root.update()
             totalTime-=1
             time.sleep(1)
-        self.countdownLabel.destroy()
+        self.studyCountdownLabel.destroy()
+        self.stopButton.destroy()
         self.animeTimer()
 
-
-        
 
     
     def studyTimer(self):
@@ -49,7 +56,7 @@ class App():
         self.submitButton.pack(side=BOTTOM, pady=15)
     
     def animeTimer(self):
-        self.root.geometry('250x250')
+        self.root.geometry('300x250')
         self.root.title("Break Timer")
         self.timerVar = tk.IntVar()
         self.animeEntry = tk.StringVar()
@@ -76,6 +83,7 @@ class App():
 
     def animeCountdown(self):
         #get() all my variables needed 
+        self.screen = 1
         totalTime = tk.IntVar()
         totalTime = self.timerVar.get()
         currentAnime = self.animeEntry.get()
@@ -93,37 +101,55 @@ class App():
         self.watchingLabel = tk.Label(self.root, text = ("Currently Watching " + currentAnime + " EP " + currentEP))
         self.watchingLabel.pack()
 
+        #stop timer button
+        self.stopButton = tk.Button(self.root, text = "Stop", command = self.stopTimer)
+        self.stopButton.pack(side=BOTTOM, pady=15)
+
         #Countdown timer
-        self.countdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime)
-        self.countdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
+        self.animeCountdownLabel = tk.Label(self.root,font=("Arial", 25), text = totalTime)
+        self.animeCountdownLabel.place(relx=0.5,rely=0.5, anchor=CENTER)
 
         while (totalTime > 0):
-            self.countdownLabel['text'] = totalTime
+            self.animeCountdownLabel['text'] = totalTime
             self.root.update()
             totalTime-=1
             time.sleep(1)
-        self.countdownLabel.destroy()
+        self.animeCountdownLabel.destroy()
         self.watchingLabel.destroy()
-        self.studyTimer()
+        self.stopButton.destroy()
+        self.completedAnimedoroScreen()
 
-#Implement Stop button during Timer
-    
+    #Implement Stop button during Timer
+    def stopTimer(self):
+
+        if (self.screen):
+            self.animeCountdownLabel.destroy()
+            self.watchingLabel.destroy()
+            self.stopButton.destroy()
+            self.animeTimer()
+        else:
+            self.studyCountdownLabel.destroy()
+            self.stopButton.destroy()
+            self.studyTimer()
+
+    def completedAnimedoroScreen(self):
+        self.completedAnimedoros += 1
+       
+        self.runsCompleted = tk.Label(self.root,font=("Arial", 13), text = 'You have completed ' + str(self.completedAnimedoros) + ' Animedoros')
+        self.runsCompleted.place(relx=0.5,rely=0.4, anchor=CENTER)
+       
+        self.startOver = tk.Label(self.root,font=("Arial", 13), text = 'Would you like to do it again?')
+        self.startOver.place(relx=0.5, rely=0.6, anchor=CENTER)
+
+        self.restartButton = tk.Button(self.root, text = "Restart", command = self.studyTimer)
+        self.restartButton.pack(side=BOTTOM,pady=5)
+        self.quitButton = tk.Button(self.root, text = "Quit", command = self.root.destroy)
+        self.quitButton.pack(side=BOTTOM,pady=5)
+        
+        
+
+            
+            
+
 
 app = App()
-
-
-#create dio background for fun
-'''
-dioImage = PhotoImage(file = "dio.png")
-backgroundDio = Canvas(root, width = 100, height = 100)
-backgroundDio.pack(fill = BOTH, expand = True)
-backgroundDio.create_image(250,250, image = dioImage)
-'''
-#create a radio buttons for what media to watch
-'''
-media =  ["Crunchyroll",
-          "Netflix" ,
-          "Disney+"]
-for nameOfPlatform in media:
-    tk.Radiobutton(root, text = nameOfPlatform, variable = radioVar, value = nameOfPlatform, padx = 20).pack()
-'''
