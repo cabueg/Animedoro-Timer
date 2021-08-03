@@ -141,11 +141,18 @@ class App():
         self.startOver = tk.Label(self.root,font=("Arial", 13), text = 'Would you like to do it again?')
         self.startOver.place(relx=0.5, rely=0.6, anchor=CENTER)
 
-        self.restartButton = tk.Button(self.root, text = "Restart", command = self.studyTimer)
-        self.restartButton.pack(side=BOTTOM,pady=5)
         self.quitButton = tk.Button(self.root, text = "Quit", command = self.root.destroy)
         self.quitButton.pack(side=BOTTOM,pady=5)
+        self.restartButton = tk.Button(self.root, text = "Restart", command = self.reset)
+        self.restartButton.pack(side=BOTTOM,pady=5)
         
+    def reset(self):
+        self.runsCompleted.destroy()
+        self.startOver.destroy()
+        self.quitButton.destroy()
+        self.restartButton.destroy()
+        self.studyTimer()
+
         
 
             
